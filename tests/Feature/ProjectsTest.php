@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -23,17 +24,31 @@ class ProjectsTest extends TestCase
             "title" => $this->faker->sentence(),
             "description" => $this->faker->paragraph(),
         ];
-        
+
         //Post a project
-        $response = $this->post('/projects',$attributes);
+        $response = $this->post('/projects', $attributes);
 
         //Test redirect
         $response->assertRedirect('/projects');
 
         //Check if a the project has been created to the database
-        $this->assertDatabaseHas('projects',$attributes);
+        $this->assertDatabaseHas('projects', $attributes);
 
         //Check if the project appears on the projects page
         $this->get('/projects')->assertSee($attributes['title']);
+    }
+
+    public function test_a_project_requires_a_title()
+    {
+        //Post a project
+        $response = $this->post('/projects', Project::factory()->make(['title' => ''])->toArray());
+        $response->assertSessionHasErrors('title');
+    }
+
+    public function test_a_project_requires_a_description()
+    {
+        //Post a project
+        $response = $this->post('/projects', Project::factory()->make(['description' => ''])->toArray());
+        $response->assertSessionHasErrors('description');
     }
 }
