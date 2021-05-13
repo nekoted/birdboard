@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/projects', [ProjectController::class,"index"]);
-Route::get('/projects/{project}', [ProjectController::class,"show"]);
-Route::post('/projects', [ProjectController::class,"store"]);
+Route::get('/projects', [ProjectController::class, "index"]);
+Route::get('/projects/{project}', [ProjectController::class, "show"]);
+Route::post('/projects', [ProjectController::class, "store"])->middleware('auth');
+
+require __DIR__ . '/auth.php';
