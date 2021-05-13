@@ -22,6 +22,10 @@ class ProjectController extends Controller
         return view('projects.show', ["project" => $project]);
     }
 
+    public function create(){
+        return view('projects.create');
+    }
+
     public function store(Request $request)
     {
         $validated_datas = $request->validate(['title' => 'required', 'description' => 'required']);

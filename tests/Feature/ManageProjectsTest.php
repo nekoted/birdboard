@@ -8,9 +8,19 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class ProjectsTest extends TestCase
+class ManageProjectsTest extends TestCase
 {
     use WithFaker, RefreshDatabase;
+
+
+
+    public function test_guests_cannot_manage_projects()
+    {
+        $project = Project::factory()->create();
+        $this->get('/projects')->assertRedirect('/login');
+        $this->get($project->path())->assertRedirect('/login');
+        $this->post('/projects', $project->toArray())->assertRedirect('/login');
+    }
 
     /**
      * Test the ability for a user to create a project 
@@ -23,6 +33,8 @@ class ProjectsTest extends TestCase
         $this->withoutExceptionHandling();
 
         $this->actingAs(User::factory()->create());
+
+        $this->get('/projects/create')->assertStatus(200);
 
         $attributes = [
             "title" => $this->faker->sentence(),
@@ -81,25 +93,6 @@ class ProjectsTest extends TestCase
         $this->get($project->path())->assertStatus(403);
     }
 
-    public function test_guests_cannot_create_projects()
-    {
-        //$this->withoutExceptionHandling();
-        $project = Project::factory()->make()->toArray();
-        $response = $this->post('/projects', $project);
-        $this->assertGuest();
-        $response->assertRedirect('/login');
-    }
-
-    public function test_guests_cannot_view_projects()
-    {
-        $this->get('/projects')->assertRedirect('/login');
-    }
-
-    public function test_guests_cannot_view_a_single_project()
-    {
-        $project = Project::factory()->create();
-        $this->get($project->path())->assertRedirect('/login');
-    }
 
     
 }
