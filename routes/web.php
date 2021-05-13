@@ -14,8 +14,12 @@ use App\Http\Controllers\ProjectController;
 |
 */
 
-Route::get('/projects', [ProjectController::class, "index"]);
-Route::get('/projects/{project}', [ProjectController::class, "show"]);
-Route::post('/projects', [ProjectController::class, "store"])->middleware('auth');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/projects', [ProjectController::class, "index"]);
+    Route::get('/projects/{project}', [ProjectController::class, "show"]);
+    Route::post('/projects', [ProjectController::class, "store"]);
+});
+
+
 
 require __DIR__ . '/auth.php';
