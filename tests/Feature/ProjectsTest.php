@@ -51,4 +51,15 @@ class ProjectsTest extends TestCase
         $response = $this->post('/projects', Project::factory()->make(['description' => ''])->toArray());
         $response->assertSessionHasErrors('description');
     }
+
+    public function test_a_user_can_view_a_project()
+    {
+        $this->withoutExceptionHandling();
+
+        $project = Project::factory()->create();
+
+        $response  = $this->get($project->path());
+        $response->assertSee($project->title);
+        $response->assertSee($project->description);
+    }
 }
