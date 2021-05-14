@@ -14,6 +14,8 @@ use App\Http\Controllers\ProjectController;
 |
 */
 
+Route::view('/', 'welcome');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/projects', [ProjectController::class, "index"]);
     Route::get('/projects/create', [ProjectController::class, "create"]);
