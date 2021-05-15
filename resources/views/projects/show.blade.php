@@ -1,13 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{$project->title}}</title>
-</head>
-<body>
-    <h1>{{$project->title}}</h1>
-    <p>{{$project->description}}</p>
-</body>
-</html>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ $project->title }}
+        </h2>
+    </x-slot>
+    <p>{{ $project->description }}</p>
+    <div class="my-4"></div>
+    <a href="/projects">Go back</a>
+</x-app-layout>

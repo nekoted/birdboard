@@ -1,3 +1,19 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+a {
+    @apply text-indigo-600;
+}
+
+.container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+nav .logo {
+    @apply text-xl flex-shrink-0 flex items-center;
+}
+
+nav .logo a {
+        color: #000;
+}
