@@ -17,6 +17,10 @@ module.exports = {
                 gray: {
                     DEFAULT: "rgba(0,0,0,0.4)",
                 },
+                blue: {
+                    DEFAULT: "#47CDFF",
+                    'light':'#8ae2fe',
+                }
             },
         },
     },

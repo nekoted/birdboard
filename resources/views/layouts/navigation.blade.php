@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="logo">
                     <a href="/">
-                        {{config('app.name')}}
+                        <img src="/images/logo.svg" alt="{{ config('app.name') }}">
                     </a>
                 </div>
 

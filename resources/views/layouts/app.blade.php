@@ -24,10 +24,8 @@
             @include('layouts.navigation')
         </div>
         <!-- Page Heading -->
-        <header>
-            <div class="container mb-3">
+        <header class="container p-4">
                 {{ $header }}
-            </div>
         </header>
 
         <!-- Page Content -->
