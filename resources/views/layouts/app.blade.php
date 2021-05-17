@@ -24,12 +24,12 @@
             @include('layouts.navigation')
         </div>
         <!-- Page Heading -->
-        <header class="container p-4">
+        <header class="container mx-auto py-4">
                 {{ $header }}
         </header>
 
         <!-- Page Content -->
-        <main class="container">
+        <main class="container mx-auto">
             {{ $slot }}
         </main>
     </div>

@@ -9,6 +9,11 @@ module.exports = {
     ],
 
     theme: {
+        container: {
+            padding: {
+              default: "1rem",
+            },
+          },
         extend: {
             fontFamily: {
                 sans: ["Nunito", ...defaultTheme.fontFamily.sans],
@@ -19,8 +24,8 @@ module.exports = {
                 },
                 blue: {
                     DEFAULT: "#47CDFF",
-                    'light':'#8ae2fe',
-                }
+                    light: "#8ae2fe",
+                },
             },
         },
     },
