@@ -3,9 +3,12 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
+use App\Models\Task;
 use App\Models\User;
 use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+
+use function PHPUnit\Framework\assertTrue;
 
 class ProjectTest extends TestCase
 {
@@ -21,5 +24,15 @@ class ProjectTest extends TestCase
     {
         $project = Project::factory()->create();
         $this->assertInstanceOf(User::class, $project->owner);
+    }
+
+    public function test_a_project_can_add_a_task(){
+        $project = Project::factory()->create();
+
+        $task = $project->addTask('Test task');
+
+        $this->assertCount(1,$project->tasks);
+
+        $this->assertTrue($project->tasks->contains($task));
     }
 }

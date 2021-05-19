@@ -10,10 +10,9 @@
         <section class="lg:w-3/4 px-3 mb-6">
             <section class="mb-6">
                 <h3 class="font-normal text-gray text-lg mb-3">Tasks</h3>
-                <div class="card mb-3">Lorem ipsum</div>
-                <div class="card mb-3">Lorem ipsum</div>
-                <div class="card mb-3">Lorem ipsum</div>
-                <div class="card">Lorem ipsum</div>
+                @foreach ($project->tasks as $task)
+                    <div class="card mb-3">{{$task->body}}</div>
+                @endforeach
             </section>
             <section>
                 <h3 class="font-normal text-gray text-lg mb-3">General notes</h3>
