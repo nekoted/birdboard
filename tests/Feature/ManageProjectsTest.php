@@ -39,7 +39,8 @@ class ManageProjectsTest extends TestCase
 
         $attributes = [
             "title" => $this->faker->sentence(),
-            "description" => $this->faker->paragraph(),
+            "description" => $this->faker->sentence(),
+            "notes" => "My notes",
         ];
 
         //Post a project
@@ -53,7 +54,28 @@ class ManageProjectsTest extends TestCase
         $response->assertRedirect($project->path());
 
         //Check if the project appears on the projects page
-        $this->get('/projects')->assertSee($attributes['title']);
+        $this->get($project->path())
+            ->assertSee($attributes['title'])
+            ->assertSee($attributes['description'])
+            ->assertSee($attributes['notes']);
+    }
+
+    public function test_a_user_can_update_a_project()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->signIn();
+
+        $project = Project::factory()->for(auth()->user(), 'owner')->create();
+
+        $attributes = ['notes' => 'Changed'];
+        $response = $this->patch($project->path(), $attributes);
+
+        //Test redirect
+        $response->assertRedirect($project->path());
+
+        //Check if a the project has been created to the database
+        $this->assertDatabaseHas('projects', $attributes);
     }
 
     public function test_a_project_requires_a_title()
@@ -82,14 +104,15 @@ class ManageProjectsTest extends TestCase
 
         $this->signIn();
 
-        $project = Project::factory()->for(auth()->user(),'owner')->create();
+        $project = Project::factory()->for(auth()->user(), 'owner')->create();
 
         $response  = $this->get($project->path());
         $response->assertSee($project->title);
         $response->assertSee($project->description);
     }
 
-    public function test_an_authenticated_user_cannot_view_a_project_of_another_user() {
+    public function test_an_authenticated_user_cannot_view_a_project_of_another_user()
+    {
 
         $this->signIn();
 
@@ -98,7 +121,18 @@ class ManageProjectsTest extends TestCase
         $this->get($project->path())->assertStatus(403);
     }
 
-    public function test_an_authenticated_user_cannot_view_projects_of_another_user() {
+    public function test_an_authenticated_user_cannot_update_a_project_of_another_user()
+    {
+
+        $this->signIn();
+
+        $project = Project::factory()->create();
+
+        $this->patch($project->path(), [])->assertStatus(403);
+    }
+
+    public function test_an_authenticated_user_cannot_view_projects_of_another_user()
+    {
 
         $this->signIn();
 
@@ -106,7 +140,4 @@ class ManageProjectsTest extends TestCase
 
         $this->get('/projects')->assertDontSee($project->title);
     }
-
-
-    
 }
