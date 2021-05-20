@@ -30,8 +30,8 @@ class ProjectController extends Controller
     {
         $validated_datas = $request->validate(['title' => 'required', 'description' => 'required']);
 
-        auth()->user()->projects()->create(["title" => $request->title, "description" => $request->description]);
+        $project = auth()->user()->projects()->create(["title" => $request->title, "description" => $request->description]);
 
-        return redirect('/projects');
+        return redirect($project->path());
     }
 }
