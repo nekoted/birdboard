@@ -98,6 +98,15 @@ class ManageProjectsTest extends TestCase
         $this->get($project->path())->assertStatus(403);
     }
 
+    public function test_an_authenticated_user_cannot_view_projects_of_another_user() {
+
+        $this->signIn();
+
+        $project = Project::factory()->create();
+
+        $this->get('/projects')->assertDontSee($project->title);
+    }
+
 
     
 }
