@@ -45,11 +45,12 @@ class ManageProjectsTest extends TestCase
         //Post a project
         $response = $this->post('/projects', $attributes);
 
-        //Test redirect
-        $response->assertRedirect('/projects');
-
         //Check if a the project has been created to the database
         $this->assertDatabaseHas('projects', $attributes);
+
+        //Test redirect
+        $project = Project::first();
+        $response->assertRedirect($project->path());
 
         //Check if the project appears on the projects page
         $this->get('/projects')->assertSee($attributes['title']);
