@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Project;
 use App\Models\User;
+use Facades\Tests\Setup\ProjectFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -31,8 +32,6 @@ class ManageProjectsTest extends TestCase
      */
     public function test_a_user_can_create_a_project()
     {
-        $this->withoutExceptionHandling();
-
         $this->signIn();
 
         $this->get('/projects/create')->assertStatus(200);
@@ -45,9 +44,6 @@ class ManageProjectsTest extends TestCase
 
         //Post a project
         $response = $this->post('/projects', $attributes);
-
-        //Check if a the project has been created to the database
-        $this->assertDatabaseHas('projects', $attributes);
 
         //Test redirect
         $project = Project::first();
@@ -62,14 +58,10 @@ class ManageProjectsTest extends TestCase
 
     public function test_a_user_can_update_a_project()
     {
-        $this->withoutExceptionHandling();
-
-        $this->signIn();
-
-        $project = Project::factory()->for(auth()->user(), 'owner')->create();
+        $project = ProjectFactory::create();
 
         $attributes = ['notes' => 'Changed'];
-        $response = $this->patch($project->path(), $attributes);
+        $response = $this->actingAs($project->owner)->patch($project->path(), $attributes);
 
         //Test redirect
         $response->assertRedirect($project->path());
@@ -100,13 +92,9 @@ class ManageProjectsTest extends TestCase
 
     public function test_a_user_can_view_their_project()
     {
-        $this->withoutExceptionHandling();
+        $project = ProjectFactory::create();
 
-        $this->signIn();
-
-        $project = Project::factory()->for(auth()->user(), 'owner')->create();
-
-        $response  = $this->get($project->path());
+        $response  = $this->actingAs($project->owner)->get($project->path());
         $response->assertSee($project->title);
         $response->assertSee($project->description);
     }
@@ -128,7 +116,7 @@ class ManageProjectsTest extends TestCase
 
         $project = Project::factory()->create();
 
-        $this->patch($project->path(), [])->assertStatus(403);
+        $this->patch($project->path())->assertStatus(403);
     }
 
     public function test_an_authenticated_user_cannot_view_projects_of_another_user()
