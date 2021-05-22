@@ -20,13 +20,15 @@
 
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
-        <div class="mb-3">
+        <div class="mb-6">
             @include('layouts.navigation')
         </div>
         <!-- Page Heading -->
-        <header class="container mx-auto py-4">
+        @isset($header)
+            <header class="container mx-auto py-4">
                 {{ $header }}
-        </header>
+            </header>
+        @endisset
 
         <!-- Page Content -->
         <main class="container mx-auto">

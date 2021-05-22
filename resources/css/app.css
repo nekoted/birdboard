@@ -22,3 +22,7 @@ nav .logo a {
 .card {
     @apply bg-white p-5 rounded-lg shadow border-none;
 }
+
+.label {
+    @apply font-semibold;
+}
