@@ -20,6 +20,7 @@ Route::view('/', 'welcome');
 Route::middleware(['auth'])->group(function () {
     Route::get('/projects', [ProjectController::class, "index"])->name('projects');
     Route::get('/projects/create', [ProjectController::class, "create"]);
+    Route::get('/projects/{project}/edit', [ProjectController::class, "edit"]);
     Route::get('/projects/{project}', [ProjectController::class, "show"]);
     Route::patch('/projects/{project}', [ProjectController::class, "update"]);
     

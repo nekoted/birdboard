@@ -1,8 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-end justify-between">
-            <p class="text-gray text-sm"><a href="/projects" class="text-gray">My projects</a> /
-                {{ $project->title }}</p>
+            <h2 class="text-gray text-sm"><a href="/projects" class="text-gray">My projects</a> /
+                {{ $project->title }}</h2>
+            <a href="{{ $project->path() . '/edit' }}" class="button">Edit project</a>
         </div>
     </x-slot>
 
