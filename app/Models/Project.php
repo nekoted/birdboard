@@ -40,8 +40,8 @@ class Project extends Model
         return $task;
     }
 
-    public function recordActivity($type)
+    public function recordActivity($description)
     {
-        $this->activities()->create(['description' => $type]);
+        $this->activities()->create(compact('description'));
     }
 }
