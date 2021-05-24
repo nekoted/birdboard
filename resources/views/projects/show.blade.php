@@ -42,6 +42,16 @@
                         placeholder="Write some useful notes about your project">{{ $project->notes }}</textarea>
                     <button type="submit" class="button">Save</button>
                 </form>
+                @if ($errors->any())
+                    <div class="m-4">
+                        <ul class="text-red-800">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
             </section>
         </section>
         <section class="lg:w-1/4 px-3">
