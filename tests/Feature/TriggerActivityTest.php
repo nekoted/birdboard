@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Activity;
+use App\Models\Task;
 use Facades\Tests\Setup\ProjectFactory;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -36,6 +37,13 @@ class TriggerActivityTest extends TestCase
         $project->addTask('test task');
 
         $this->assertDatabaseHas('activities', ['description' => 'created_task', 'project_id' => $project->id]);
+
+        //dd($project->activities->toArray());
+
+        tap($project->activities->last(), function ($activity) {
+
+            $this->assertInstanceOf(Task::class, $activity->subject);
+        });
     }
 
     public function test_completing_a_task()
@@ -45,6 +53,10 @@ class TriggerActivityTest extends TestCase
         $this->actingAs($project->owner)->patch($project->tasks[0]->path(), ['body' => 'test task', 'completed' => true]);
 
         $this->assertDatabaseHas('activities', ['description' => 'completed_task', 'project_id' => $project->id]);
+
+        tap($project->activities->last(), function ($activity) {
+            $this->assertInstanceOf(Task::class, $activity->subject);
+        });
     }
 
     public function test_incompleting_a_task()
@@ -55,10 +67,14 @@ class TriggerActivityTest extends TestCase
         $this->actingAs($project->owner)->patch($project->tasks[0]->path(), ['body' => 'test task', 'completed' => true]);
 
         $this->assertDatabaseHas('activities', ['description' => 'completed_task', 'project_id' => $project->id]);
-        
+
         $this->actingAs($project->owner)->patch($project->tasks[0]->path(), ['body' => 'test task']);
 
         $this->assertDatabaseHas('activities', ['description' => 'incompleted_task', 'project_id' => $project->id]);
+
+        tap($project->activities->last(), function ($activity) {
+            $this->assertInstanceOf(Task::class, $activity->subject);
+        });
     }
 
     public function test_deleting_a_task()
