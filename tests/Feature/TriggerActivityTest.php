@@ -8,6 +8,7 @@ use App\Models\Task;
 use Facades\Tests\Setup\ProjectFactory;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Setup\ProjectFactory as SetupProjectFactory;
 
 class TriggerActivityTest extends TestCase
 {
@@ -18,16 +19,29 @@ class TriggerActivityTest extends TestCase
         $project = ProjectFactory::create();
 
         $this->assertCount(1, $project->activities);
-        $this->assertDatabaseHas('activities', ['description' => 'created']);
+        $this->assertDatabaseHas('activities', ['description' => 'created_project']);
+        $this->assertNull($project->activities->last()->changes);
     }
 
     public function test_updating_a_project()
     {
         $project = ProjectFactory::create();
 
-        $project->update(['title' => 'Changed']);
+        $attributes = ['title' => 'Changed'];
 
-        $this->assertDatabaseHas('activities', ['description' => 'updated', 'project_id' => $project->id]);
+        $excepted = [
+            'before' => ['title' => $project->title],
+            'after' => $attributes,
+        ];
+
+        $project->update($attributes);
+
+        $this->assertDatabaseHas('activities', ['description' => 'updated_project', 'project_id' => $project->id]);
+
+
+        tap($project->activities->last(), function ($activity) use ($excepted) {
+            $this->assertEquals($excepted, $activity->changes);
+        });
     }
 
     public function test_creating_a_new_task()

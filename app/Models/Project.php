@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Support\Arr;
+use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Project extends Model
 {
-    use HasFactory;
+    use HasFactory, RecordsActivity;
 
     protected $guarded = ['id'];
 
@@ -38,13 +40,5 @@ class Project extends Model
     {
         $task = $this->tasks()->create(compact('body'));
         return $task;
-    }
-
-    public function recordActivity($description)
-    {
-        $this->activities()->create([
-            'project_id' => $this->id,
-            'description' => $description,
-        ]);
     }
 }
