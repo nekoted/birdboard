@@ -1,1 +1,1 @@
-{{$activity->description}}
+{{$activity->user->name}} has done this action "{{$activity->description}}"
