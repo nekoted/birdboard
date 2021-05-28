@@ -7,6 +7,7 @@ use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Facades\Tests\Setup\ProjectFactory;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class ProjectTasksTest extends TestCase
@@ -16,8 +17,10 @@ class ProjectTasksTest extends TestCase
 
     public function test_guests_cannot_add_task_to_projects()
     {
-
+        $this->signIn();
         $project = Project::factory()->create();
+        Auth::logout();
+
         $response = $this->post($project->path() . '/tasks');
         $response->assertRedirect('/login');
     }
@@ -49,6 +52,8 @@ class ProjectTasksTest extends TestCase
 
     public function test_a_project_can_have_tasks()
     {
+        $this->signIn();
+
         $project = ProjectFactory::create();
 
         $this->actingAs($project->owner)->post($project->path() . '/tasks', ['body' => 'Test task']);
@@ -70,6 +75,8 @@ class ProjectTasksTest extends TestCase
 
     public function test_a_task_requires_a_body()
     {
+        $this->signIn();
+
         $project = ProjectFactory::create();
 
         $attributes = Task::factory()->make(['body' => ''])->toArray();
@@ -79,6 +86,8 @@ class ProjectTasksTest extends TestCase
     }
 
     public function test_a_task_can_be_marked_as_complete(){
+        $this->signIn();
+
         $project = ProjectFactory::withTasks(1)->create();
 
         $task = $project->tasks[0];
@@ -89,6 +98,8 @@ class ProjectTasksTest extends TestCase
     }
 
     public function test_a_task_can_be_marked_as_incomplete(){
+
+        $this->signIn();
 
         $project = ProjectFactory::withTasks(1)->create();
 

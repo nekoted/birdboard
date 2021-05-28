@@ -65,6 +65,7 @@ trait RecordsActivity
     public function recordActivity($description)
     {
         $this->activities()->create([
+            'user_id' => auth()->id(),
             'description' => $description,
             'project_id' => class_basename($this) == 'Project' ? $this->id : $this->project_id,
             'changes' => $this->activityChanges(),

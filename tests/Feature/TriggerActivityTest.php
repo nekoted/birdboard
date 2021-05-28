@@ -16,6 +16,8 @@ class TriggerActivityTest extends TestCase
 
     public function test_creating_a_project()
     {
+        $this->signIn();
+        
         $project = ProjectFactory::create();
 
         $this->assertCount(1, $project->activities);
@@ -25,6 +27,8 @@ class TriggerActivityTest extends TestCase
 
     public function test_updating_a_project()
     {
+        $this->signIn();
+
         $project = ProjectFactory::create();
 
         $attributes = ['title' => 'Changed'];
@@ -46,6 +50,7 @@ class TriggerActivityTest extends TestCase
 
     public function test_creating_a_new_task()
     {
+        $this->signIn();
         $project = ProjectFactory::create();
 
         $project->addTask('test task');
@@ -62,6 +67,8 @@ class TriggerActivityTest extends TestCase
 
     public function test_completing_a_task()
     {
+        $this->signIn();
+
         $project = ProjectFactory::withTasks(1)->create();
 
         $this->actingAs($project->owner)->patch($project->tasks[0]->path(), ['body' => 'test task', 'completed' => true]);
@@ -75,6 +82,8 @@ class TriggerActivityTest extends TestCase
 
     public function test_incompleting_a_task()
     {
+        $this->signIn();
+
         $project = ProjectFactory::withTasks(1)->create();
 
 
@@ -93,6 +102,8 @@ class TriggerActivityTest extends TestCase
 
     public function test_deleting_a_task()
     {
+        $this->signIn();
+
         $project = ProjectFactory::withTasks(1)->create();
 
         $project->tasks[0]->delete();

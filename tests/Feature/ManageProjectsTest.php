@@ -7,6 +7,7 @@ use App\Models\User;
 use Facades\Tests\Setup\ProjectFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class ManageProjectsTest extends TestCase
@@ -17,7 +18,9 @@ class ManageProjectsTest extends TestCase
 
     public function test_guests_cannot_manage_projects()
     {
+        $this->signIn();
         $project = Project::factory()->create();
+        Auth::logout();
         $this->get('/projects')->assertRedirect('/login');
         $this->get('/projects/create')->assertRedirect('/login');
         $this->get($project->path().'/edit')->assertRedirect('/login');
@@ -62,7 +65,9 @@ class ManageProjectsTest extends TestCase
 
         $this->withoutExceptionHandling();
 
+        $this->signIn();
         $project = ProjectFactory::create();
+        Auth::logout();
 
         $attributes = [
             "title" => $this->faker->sentence(),
@@ -103,7 +108,9 @@ class ManageProjectsTest extends TestCase
 
     public function test_a_user_can_view_their_project()
     {
+        $this->signIn();
         $project = ProjectFactory::create();
+        Auth::logout();
 
         $response  = $this->actingAs($project->owner)->get($project->path());
         $response->assertSee($project->title);
