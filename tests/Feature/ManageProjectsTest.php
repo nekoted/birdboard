@@ -8,6 +8,8 @@ use Facades\Tests\Setup\ProjectFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\UnauthorizedException;
+use Tests\Setup\ProjectFactory as SetupProjectFactory;
 use Tests\TestCase;
 
 class ManageProjectsTest extends TestCase
@@ -23,9 +25,23 @@ class ManageProjectsTest extends TestCase
         Auth::logout();
         $this->get('/projects')->assertRedirect('/login');
         $this->get('/projects/create')->assertRedirect('/login');
-        $this->get($project->path().'/edit')->assertRedirect('/login');
+        $this->get($project->path() . '/edit')->assertRedirect('/login');
         $this->get($project->path())->assertRedirect('/login');
         $this->post('/projects', $project->toArray())->assertRedirect('/login');
+    }
+
+    public function test_unauthorized_user_cannot_delete_project(){
+        //Given a project
+        $this->signIn();
+        $project = ProjectFactory::create();
+        Auth::logout();
+
+        //If an unauthorized user try to delete a project
+        $response = $this->delete($project->path());
+        //A forbidden response is returned
+        $response->assertRedirect('/login');
+        //The project still exists
+        $this->assertDatabaseHas('projects',['id'=>$project->id]);
     }
 
     /**
@@ -77,13 +93,25 @@ class ManageProjectsTest extends TestCase
 
         $response = $this->actingAs($project->owner)->patch($project->path(), $attributes);
 
-        $this->actingAs($project->owner)->get($project->path().'/edit')->assertOk();
+        $this->actingAs($project->owner)->get($project->path() . '/edit')->assertOk();
 
         //Test redirect
         $response->assertRedirect($project->path());
 
         //Check if a the project has been created to the database
         $this->assertDatabaseHas('projects', $attributes);
+    }
+
+    public function test_a_user_can_delete_a_project()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = $this->signIn();
+        $project = ProjectFactory::ownedBy($user)->create();
+
+        $this->delete($project->path());
+
+        $this->assertDatabaseMissing('projects', ['id' => $project->id]);
     }
 
     public function test_a_project_requires_a_title()
