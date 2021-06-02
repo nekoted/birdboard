@@ -30,7 +30,8 @@ class ManageProjectsTest extends TestCase
         $this->post('/projects', $project->toArray())->assertRedirect('/login');
     }
 
-    public function test_unauthorized_user_cannot_delete_project(){
+    public function test_unauthorized_user_cannot_delete_project()
+    {
         //Given a project
         $this->signIn();
         $project = ProjectFactory::create();
@@ -41,13 +42,12 @@ class ManageProjectsTest extends TestCase
         //A forbidden response is returned
         $response->assertRedirect('/login');
         //The project still exists
-        $this->assertDatabaseHas('projects',['id'=>$project->id]);
+        $this->assertDatabaseHas('projects', ['id' => $project->id]);
     }
 
     /**
      * Test the ability for a user to create a project 
      *
-     * @group dev
      * @return void
      */
     public function test_a_user_can_create_a_project()
@@ -136,13 +136,44 @@ class ManageProjectsTest extends TestCase
 
     public function test_a_user_can_view_their_project()
     {
-        $this->signIn();
-        $project = ProjectFactory::create();
+        $user = $this->signIn();
+        $project = ProjectFactory::ownedBy($user)->create();
+        $response  = $this->get($project->path());
         Auth::logout();
-
-        $response  = $this->actingAs($project->owner)->get($project->path());
         $response->assertSee($project->title);
         $response->assertSee($project->description);
+    }
+
+    public function test_a_user_can_view_a_project_he_has_been_invited_to()
+    {
+        $user = $this->signIn();
+        $project = ProjectFactory::ownedBy($user)->create();
+        Auth::logout();
+
+        //As an invitee
+        $invitee = User::factory()->create();
+        $project->invite($invitee);
+        $this->signIn($invitee);
+
+        $response  = $this->get($project->path());
+        $response->assertSee($project->title);
+        $response->assertSee($project->description);
+    }
+
+    public function test_a_user_can_view_the_projects_he_has_been_invited_to()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = $this->signIn();
+        $project = ProjectFactory::ownedBy($user)->create();
+        Auth::logout();
+
+        //As an invitee
+        $invitee = User::factory()->create();
+        $project->invite($invitee);
+        $this->signIn($invitee);
+        $response  = $this->get('/projects');
+        $response->assertSee($project->title);
     }
 
     public function test_an_authenticated_user_cannot_view_a_project_of_another_user()

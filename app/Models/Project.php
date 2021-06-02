@@ -41,4 +41,14 @@ class Project extends Model
         $task = $this->tasks()->create(compact('body'));
         return $task;
     }
+
+    public function invite(User $user)
+    {
+        $this->members()->save($user);
+    }
+
+    public function members()
+    {
+        return $this->belongsToMany(User::class, 'project_members')->withTimestamps();
+    }
 }

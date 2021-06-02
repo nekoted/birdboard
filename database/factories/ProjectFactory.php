@@ -22,11 +22,10 @@ class ProjectFactory extends Factory
      */
     public function definition()
     {
-        $user = User::factory()->create();
         return [
             'title' => $this->faker->sentence(4),
             'description' => $this->faker->sentence(4),
-            'owner_id' => $user->id,
+            'owner_id' => User::factory(),
         ];
     }
 }
