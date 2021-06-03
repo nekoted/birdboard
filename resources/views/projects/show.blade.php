@@ -3,7 +3,15 @@
         <div class="flex items-end justify-between">
             <h2 class="text-gray text-sm"><a href="/projects" class="text-gray">My projects</a> /
                 {{ $project->title }}</h2>
-            <a href="{{ $project->path() . '/edit' }}" class="button">Edit project</a>
+            <div class="flex items-center">
+                @foreach ($project->members as $member)
+                    <img src="{{$member->avatar}}"
+                        alt="{{ $member->name }}'s avatar" class="rounded-full w-8 mr-2">
+                @endforeach
+                <img src="{{$member->avatar}}"
+                alt="{{ $member->name }}'s avatar" class="rounded-full rounded-full w-8">
+                <a href="{{ $project->path() . '/edit' }}" class="button ml-4">Edit project</a>
+            </div>
         </div>
     </x-slot>
 
