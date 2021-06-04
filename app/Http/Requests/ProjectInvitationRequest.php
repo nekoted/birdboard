@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\User;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Foundation\Http\FormRequest;
 
 class ProjectInvitationRequest extends FormRequest
 {
+    protected $errorBag = 'invitation';
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -14,7 +17,7 @@ class ProjectInvitationRequest extends FormRequest
      */
     public function authorize()
     {
-        return Gate::allows('update', $this->route('project'));
+        return Gate::allows('manage', $this->route('project'));
     }
 
     /**
@@ -25,14 +28,24 @@ class ProjectInvitationRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => ['required', 'email:filter', 'exists:users,email'],
+            'email' => [
+                'required',
+                'email:filter',
+                'exists:users,email',
+                function ($attribute, $value, $fail) {
+                    $invitee = User::whereEmail($this->email)->first();
+                    if ($this->route('project')->members->contains($invitee)) {
+                        $fail('This user is already a member of this project');
+                    }
+                },
+            ],
         ];
     }
 
     public function messages()
     {
         return [
-            'email.exists' => 'The user you are invited must have an account',
+            'email.exists' => 'The user you are inviting must have an account',
         ];
     }
 }

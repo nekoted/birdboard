@@ -5,11 +5,10 @@
                 {{ $project->title }}</h2>
             <div class="flex items-center">
                 @foreach ($project->members as $member)
-                    <img src="{{$member->avatar}}"
-                        alt="{{ $member->name }}'s avatar" class="rounded-full w-8 mr-2">
+                    <img src="{{ $member->avatar }}" alt="{{ $member->name }}'s avatar" class="rounded-full w-8 mr-2">
                 @endforeach
-                <img src="{{$member->avatar}}"
-                alt="{{ $member->name }}'s avatar" class="rounded-full rounded-full w-8">
+                <img src="{{ $member->avatar }}" alt="{{ $member->name }}'s avatar"
+                    class="rounded-full rounded-full w-8">
                 <a href="{{ $project->path() . '/edit' }}" class="button ml-4">Edit project</a>
             </div>
         </div>
@@ -50,20 +49,15 @@
                         placeholder="Write some useful notes about your project">{{ $project->notes }}</textarea>
                     <button type="submit" class="button">Save</button>
                 </form>
-                @if ($errors->any())
-                    <div class="m-4">
-                        <ul class="text-red-800">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+                @include('projects.errors')
             </section>
         </section>
         <section class="lg:w-1/4 px-3">
             @include('projects.card')
             @include('projects.activity.card')
+            @can('manage', $project)
+                @include('projects.invite')
+            @endcan
         </section>
     </div>
 </x-app-layout>

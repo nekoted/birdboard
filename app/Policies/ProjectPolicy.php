@@ -45,6 +45,18 @@ class ProjectPolicy
     }
 
     /**
+     * Determine whether the user can manage the project
+     *
+     * @param User $user
+     * @param Project $project
+     * @return mixed
+     */
+    public function manage(User $user, Project $project)
+    {
+        return $user->is($project->owner);
+    }
+
+    /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
