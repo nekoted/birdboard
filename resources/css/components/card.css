@@ -1,0 +1,11 @@
+.card {
+    @apply p-5 rounded-lg shadow border-none bg-card flex flex-col;
+}
+
+
+
+
+
+
+
+

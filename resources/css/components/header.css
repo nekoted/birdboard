@@ -1,0 +1,7 @@
+nav .logo {
+    @apply text-xl flex-shrink-0 flex items-center;
+}
+
+nav .logo a {
+        color: #000;
+}

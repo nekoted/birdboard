@@ -2,27 +2,9 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-a {
-    @apply text-indigo-600;
-}
+@import 'themes/themes';
+@import 'base';
 
-.button {
-    @apply bg-blue text-white no-underline rounded py-2 px-5;
-    box-shadow : 0 2px 7px 0 #b0eaff;
-}
-
-nav .logo {
-    @apply text-xl flex-shrink-0 flex items-center;
-}
-
-nav .logo a {
-        color: #000;
-}
-
-.card {
-    @apply bg-white p-5 rounded-lg shadow border-none;
-}
-
-.label {
-    @apply font-semibold;
-}
+@import 'components/header';
+@import 'components/button';
+@import 'components/card';

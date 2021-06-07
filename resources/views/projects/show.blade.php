@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-end justify-between">
-            <h2 class="text-gray text-sm"><a href="/projects" class="text-gray">My projects</a> /
+            <h2 class="text-muted text-sm"><a href="/projects" class="text-muted">My projects</a> /
                 {{ $project->title }}</h2>
             <div class="flex items-center">
                 @foreach ($project->members as $member)
@@ -25,7 +25,7 @@
                             @method('PATCH')
                             <div class="flex items-center">
                                 <input type="text" name="body" value="{{ $task->body }}"
-                                    class="border-none focus:ring-0 focus:outline-none focus:border-none w-full {{ $task->completed ? 'text-gray' : '' }}">
+                                    class="bg-card border-none focus:ring-0 focus:outline-none focus:border-none w-full {{ $task->completed ? 'text-muted line-through' : '' }}">
                                 <input type="checkbox" name="completed" onchange="this.form.submit()"
                                     {{ $task->completed ? 'checked' : '' }}>
                             </div>
@@ -36,7 +36,7 @@
                     <form action="{{ $project->path() . '/tasks' }}" method="POST">
                         @csrf
                         <input type="text" name="body" placeholder="Add a new task..."
-                            class="border-none focus:ring-0 focus:outline-none focus:border-none w-full">
+                            class="bg-card border-none focus:ring-0 focus:outline-none focus:border-none w-full">
                     </form>
                 </div>
             </section>
@@ -45,7 +45,7 @@
                 <form action="{{ $project->path() }}" method="post">
                     @csrf
                     @method('PATCH')
-                    <textarea name="notes" class="card w-full" style="min-height:200px;"
+                    <textarea name="notes" class="card w-full mb-3" style="min-height:200px;"
                         placeholder="Write some useful notes about your project">{{ $project->notes }}</textarea>
                     <button type="submit" class="button">Save</button>
                 </form>

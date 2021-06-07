@@ -3,7 +3,7 @@
         @foreach ($project->activities as $activity)
             <li>
                 @includeFirst(["projects.activity.{$activity->description}","projects.activity.default"])
-                <span class="text-gray">{{$activity->created_at->diffForHumans(null,true)}}</span>
+                <span class="text-muted">{{$activity->created_at->diffForHumans(null,true)}}</span>
             </li>
         @endforeach
     </ul>
