@@ -6,51 +6,53 @@ module.exports = {
     purge: [
         "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
         "./storage/framework/views/*.php",
-        "./resources/views/**/*.blade.php",
+        "./resources/views/**/*.blade.php"
     ],
 
     theme: {
         container: {
             padding: {
-                default: "1rem",
-            },
+                default: "1rem"
+            }
         },
-        backgroundColor: (theme) => ({
+        backgroundColor: theme => ({
             ...theme("colors"),
             page: "var(--page-background-color)",
             card: "var(--card-background-color)",
             button: "var(--button-background-color)",
-            header: "var(--header-background-color)",
+            header: "var(--header-background-color)"
         }),
         extend: {
             fontFamily: {
-                sans: ["Nunito", ...defaultTheme.fontFamily.sans],
+                sans: ["Nunito", ...defaultTheme.fontFamily.sans]
             },
             colors: {
-                'default' : "var(--text-default-color)",
+                default: "var(--text-default-color)",
+                accent: "var(--text-default-color)",
                 button: {
-                    DEFAULT: "var(--button-text-color)",
+                    DEFAULT: "var(--button-text-color)"
                 },
                 muted: {
                     DEFAULT: "var(--text-muted-color)",
-                    'light': "var(--text-muted-light-color)",
+                    light: "var(--text-muted-light-color)"
                 },
                 accent: {
                     DEFAULT: "var(--text-accent-color)",
-                    'light': "var(--text-accent-light-color)",
-                },
+                    light: "var(--text-accent-light-color)"
+                }
             },
             textColor: {
-                button: "var(--button-text-color)",
+                button: "var(--button-text-color)"
             },
-        },
+            borderRadius: ["hover"]
+        }
     },
 
     variants: {
         extend: {
-            opacity: ["disabled"],
-        },
+            opacity: ["disabled"]
+        }
     },
 
-    plugins: [require("@tailwindcss/forms")],
+    plugins: [require("@tailwindcss/forms")]
 };
