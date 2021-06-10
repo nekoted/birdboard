@@ -7,7 +7,7 @@
                 @foreach ($project->members as $member)
                     <img src="{{ $member->avatar }}" alt="{{ $member->name }}'s avatar" class="rounded-full w-8 mr-2">
                 @endforeach
-                <img src="{{ $member->avatar }}" alt="{{ $member->name }}'s avatar"
+                <img src="{{ $project->owner->avatar }}" alt="{{ $project->owner->name }}'s avatar"
                     class="rounded-full rounded-full w-8">
                 <a href="{{ $project->path() . '/edit' }}" class="button ml-4">Edit project</a>
             </div>
