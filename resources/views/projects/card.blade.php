@@ -1,5 +1,5 @@
 <div class="card">
-    <h3 class="font-bold text-xl py-4 -ml-5 mb-3 border-l-4 border-blue-light pl-4"><a
+    <h3 class="font-bold text-xl py-4 -ml-5 mb-3 border-l-4 border-accent pl-4"><a
             href="{{ $project->path() }}">{{ $project->title }}</a></h3>
     <div class="mb-4 flex-1">{{ Str::limit($project->description, 100) }}</div>
     <footer>
