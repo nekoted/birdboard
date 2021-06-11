@@ -47,7 +47,7 @@ class ManageProjectsTest extends TestCase
 
     /**
      * Test the ability for a user to create a project 
-     *
+     * 
      * @return void
      */
     public function test_a_user_can_create_a_project()
@@ -75,6 +75,63 @@ class ManageProjectsTest extends TestCase
             ->assertSee($attributes['description'])
             ->assertSee($attributes['notes']);
     }
+
+    /**
+     * Test the ability for a user to create a project  with tasks
+     * 
+     * @return void
+     */
+    public function test_a_user_can_create_a_project_with_tasks()
+    {
+        $this->signIn();
+
+        $attributes = [
+            "title" => $this->faker->sentence(),
+            "description" => $this->faker->sentence(),
+            "notes" => "My notes",
+            "tasks" => [
+                ['body' => 'task 1'],
+                ['body' => 'task 2'],
+            ]
+        ];
+
+        //Post a project
+        $response = $this->post('/projects', $attributes);
+
+        //Test redirect
+        $project = Project::first();
+
+        //Check if the project has tasks
+        $this->assertCount(2, $project->tasks);
+    }
+
+    /**
+     * A user cannot create a project with empty tasks
+     * 
+     * @return void
+     */
+    public function test_a_user_cannot_create_a_project_with_empty_tasks()
+    {
+        $this->signIn();
+
+        $attributes = [
+            "title" => $this->faker->sentence(),
+            "description" => $this->faker->sentence(),
+            "notes" => "My notes",
+            "tasks" => [
+                ['body' => ''],
+                ['body' => 'task 2'],
+            ]
+        ];
+
+        //Post a project
+        $response = $this->post('/projects', $attributes);
+        $response->assertSessionHasErrors('tasks.0.body');
+
+        $this->assertDatabaseCount('projects', 0);
+        $this->assertDatabaseCount('tasks', 0);
+    }
+
 
     public function test_a_user_can_update_a_project()
     {

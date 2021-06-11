@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller
 {
@@ -37,6 +38,9 @@ class ProjectController extends Controller
         $validated_datas = $this->validateRequest();
 
         $project = auth()->user()->projects()->create($validated_datas);
+        if ($request->has('tasks')) {
+            $project->tasks()->createMany($validated_datas['tasks']);
+        }
 
         if ($request->expectsJson()) {
             return ['message' => $project->path()];
@@ -65,10 +69,18 @@ class ProjectController extends Controller
 
     protected function validateRequest()
     {
-        return request()->validate([
-            'title' => 'sometimes|required',
-            'description' => 'sometimes|required',
-            'notes' => 'nullable'
-        ]);
+        return Validator::make(
+            request()->all(),
+            [
+                'title' => 'sometimes|required',
+                'description' => 'sometimes|required',
+                'notes' => 'nullable',
+                'tasks' => 'array',
+                'tasks.*.body' => 'required',
+            ],
+            [
+                'tasks.*.body.*' => 'The task cannot be empty',
+            ]
+        )->validate();
     }
 }
