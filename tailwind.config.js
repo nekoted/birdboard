@@ -29,6 +29,7 @@ module.exports = {
             colors: {
                 default: "var(--text-default-color)",
                 accent: "var(--text-default-color)",
+                error: "var(--text-error-color)",
                 button: {
                     DEFAULT: "var(--button-text-color)"
                 },
